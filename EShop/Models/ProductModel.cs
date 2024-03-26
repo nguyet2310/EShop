@@ -12,6 +12,7 @@ namespace EShop.Models
         public string Slug { get; set; }
         public string Description { get; set; }
         [Required, MinLength(4, ErrorMessage = "Yêu cầu nhập Giá Sản phẩm")]
+        public string Image { get; set; }
         public decimal Price { get; set; }
         public int BrandId { get; set; }
         public int CategoryId { get; set; }

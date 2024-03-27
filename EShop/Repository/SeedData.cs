@@ -18,7 +18,7 @@ namespace EShop.Repository
 
                 _context.Products.AddRange(
                     new ProductModel { Name="Macbook", Slug="macbook", Description="Macbook is best", Image="1.jpg", Category = macbook, Brand = apple, Price=1233 },
-                    new ProductModel { Name="Pc", Slug="pc", Description="Pc is best", Image="1.jpg", Category = pc, Brand = samsung, Price=1233 }
+                    new ProductModel { Name="Pc", Slug="pc", Description="Pc is best", Image="2.jpg", Category = pc, Brand = samsung, Price=1233 }
                 );
                 _context.SaveChanges();
             }

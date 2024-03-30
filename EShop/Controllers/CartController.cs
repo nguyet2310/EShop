@@ -52,6 +52,8 @@ namespace EShop.Controllers
             // Lưu lại danh sách giỏ hàng đã cập nhật vào session
             HttpContext.Session.SetJson("Cart", cart);
 
+            TempData["success"] = "Add Item to cart successfully";
+
             return Redirect(Request.Headers["Referer"].ToString());
         }
 
@@ -76,6 +78,8 @@ namespace EShop.Controllers
             {
                 HttpContext.Session.SetJson("Cart", cart);
             }
+
+            TempData["success"] = "Decrease Item quantity to cart successfully";
 
             return RedirectToAction("Index");
         }
@@ -102,6 +106,8 @@ namespace EShop.Controllers
                 HttpContext.Session.SetJson("Cart", cart);
             }
 
+            TempData["success"] = "Increase Item quantity to cart successfully";
+
             return RedirectToAction("Index");
         }
 
@@ -118,12 +124,16 @@ namespace EShop.Controllers
             {
                 HttpContext.Session.SetJson("Cart", cart);
             }
+
+            TempData["success"] = "Remove Item of cart successfully";
+
             return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Clear()
         {
             HttpContext.Session.Remove("Cart");
+            TempData["success"] = "Clear all Item of cart successfully";
             return RedirectToAction("Index");
         }
     }

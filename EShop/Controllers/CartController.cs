@@ -54,5 +54,77 @@ namespace EShop.Controllers
 
             return Redirect(Request.Headers["Referer"].ToString());
         }
+
+        public async Task<IActionResult> Decrease(int id)
+        {
+            List<CartItemModel> cart = HttpContext.Session.GetJson<List<CartItemModel>>("Cart");
+
+            CartItemModel cartItem= cart.Where(c=> c.ProductId==id).FirstOrDefault();
+            if(cartItem.Quantity > 1)
+            {
+                --cartItem.Quantity;
+            }
+            else
+            {
+                cart.RemoveAll(c => c.ProductId==id);
+            }
+            if(cart.Count == 0)
+            {
+                HttpContext.Session.Remove("Cart");
+            }
+            else
+            {
+                HttpContext.Session.SetJson("Cart", cart);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Increase(int id)
+        {
+            List<CartItemModel> cart = HttpContext.Session.GetJson<List<CartItemModel>>("Cart");
+
+            CartItemModel cartItem = cart.Where(c => c.ProductId==id).FirstOrDefault();
+            if (cartItem.Quantity >= 1)
+            {
+                ++cartItem.Quantity;
+            }
+            else
+            {
+                cart.RemoveAll(c => c.ProductId==id);
+            }
+            if (cart.Count == 0)
+            {
+                HttpContext.Session.Remove("Cart");
+            }
+            else
+            {
+                HttpContext.Session.SetJson("Cart", cart);
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Remove(int id)
+        {
+            List<CartItemModel> cart = HttpContext.Session.GetJson<List<CartItemModel>>("Cart");
+
+            cart.RemoveAll(p => p.ProductId==id);
+            if(cart.Count == 0)
+            {
+                HttpContext.Session.Remove("Cart");
+            }
+            else
+            {
+                HttpContext.Session.SetJson("Cart", cart);
+            }
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Clear()
+        {
+            HttpContext.Session.Remove("Cart");
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -35,9 +35,15 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+//MapControllerRoute cua frontend
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+//MapControllerRoute cua backend
+app.MapControllerRoute(
+    name: "Areas",
+    pattern: "{area:exists}/{controller=Product}/{action=Index}/{id?}");
 
 //seeding data
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>();

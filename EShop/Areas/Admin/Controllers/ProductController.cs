@@ -1,4 +1,5 @@
-﻿using EShop.Repository;
+﻿using EShop.Models;
+using EShop.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,16 @@ namespace EShop.Areas.Admin.Controllers
         public IActionResult Create()
         {
             ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name");
+            ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name");
             return View();
-        }   
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create (ProductModel product)
+        {
+            ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name", product.CategoryId);
+            ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name", product.BrandId);
+            return View(product);
+        }
     }
 }

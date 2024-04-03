@@ -10,10 +10,12 @@ namespace EShop.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly DataContext _dataContext;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(DataContext dataContext)
+        public ProductController(DataContext dataContext, IWebHostEnvironment webHostEnvironment)
         {
             _dataContext=dataContext;
+            _webHostEnvironment=webHostEnvironment;
         }
         public async Task<IActionResult> Index()
         {
@@ -29,10 +31,52 @@ namespace EShop.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create (ProductModel product)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ProductModel product)
         {
             ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name", product.CategoryId);
             ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name", product.BrandId);
+            if (ModelState.IsValid)
+            {
+                product.Slug = product.Name.Replace(" ", "-");
+                var slug = await _dataContext.Products.FirstOrDefaultAsync(p => p.Slug == product.Slug);
+                if (slug != null)
+                {
+                    ModelState.AddModelError("", "Sản phẩm đã có trong database");
+                    return View(product);
+                }
+
+                if (product.ImageUpload != null)
+                {
+                    string uploadsDir = Path.Combine(_webHostEnvironment.WebRootPath, "media/products");
+                    string imageName = Guid.NewGuid().ToString() + "_" + product.ImageUpload.FileName;
+                    string filePath = Path.Combine(uploadsDir, imageName);
+
+                    FileStream fs = new FileStream(filePath, FileMode.Create);
+                    await product.ImageUpload.CopyToAsync(fs);
+                    fs.Close();
+                    product.Image = imageName;
+                }
+
+                _dataContext.Add(product);
+                await _dataContext.SaveChangesAsync();
+                TempData["success"] = "Thêm sản phẩm thành công";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["error"] = "Model có một vài thứ đang bị lỗi";
+                //List<string> errors = new List<string>();
+                //foreach (var value in ModelState.Values)
+                //{
+                //    foreach (var error in value.Errors)
+                //    {
+                //        errors.Add(error.ErrorMessage);
+                //    }
+                //}
+                //string errorMas = string.Join("\n", errors);
+                //return BadRequest(errorMas);
+            }
             return View(product);
         }
     }

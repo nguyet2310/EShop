@@ -1,12 +1,12 @@
 ﻿@model ProductModel
 @{
-    ViewData["title"] = "Create Product";
+    ViewData["title"] = "Edit Product";
 }
 
-<h4>Create Product</h4>
+<h4>Edit Product</h4>
 
 <div class="col-md-9">
-    <form asp-action="Create" enctype="multipart/form-data">
+    <form asp-action="Edit" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label>Name</label>
@@ -41,9 +41,10 @@
             <label>Image</label>
             <input asp-for="ImageUpload" class="form-control" />
             <span asp-validation-for="ImageUpload" class="text-danger" />
+            <img src="~/media/products/@Model.Image" width="120" />
         </div>
         <div class="form-group">
-            <button class="btn btn-primary">Create</button>
+            <button class="btn btn-primary">Update</button>
         </div>
     </form>
     <a href="/Index">Back to List Product</a>

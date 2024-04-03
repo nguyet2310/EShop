@@ -46,7 +46,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 //seeding data
-var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>();
-SeedData.SeedingData(context);
+//var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>();
+//SeedData.SeedingData(context);
 
 app.Run();

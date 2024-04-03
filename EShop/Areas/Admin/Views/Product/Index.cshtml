@@ -35,8 +35,11 @@
                 <td>@item.Category.Name</td>
                 <td>@item.Brand.Name</td>
                 <td>
-                    <a href="/Edit/Product/@item.Id" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="/Delete/Product/@item.Id" class="btn btn-danger btn-sm">Delete</a>
+                    <a href="/Admin/Product/Edit/@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="/Admin/Product/Delete/@item.Id" class="btn btn-danger btn-sm">Delete</a>
+
+                    @*<a asp-action="Edit" asp-controller="Product" asp-route-Id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-controller="Product" asp-route-Id="@item.Id" class="btn btn-danger btn-sm">Delete</a>*@
                 </td>
             </tr>
         }

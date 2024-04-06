@@ -96,13 +96,16 @@ namespace EShop.Areas.Admin.Controllers
             ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name", product.BrandId);
             if (ModelState.IsValid)
             {
+                // Lấy sản phẩm từ cơ sở dữ liệu
+                var existingProduct = await _dataContext.Products.FindAsync(product.Id);
+
                 product.Slug = product.Name.Replace(" ", "-");
-                var slug = await _dataContext.Products.FirstOrDefaultAsync(p => p.Slug == product.Slug);
-                if (slug != null)
-                {
-                    ModelState.AddModelError("", "Sản phẩm đã có trong database");
-                    return View(product);
-                }
+                //var slug = await _dataContext.Products.FirstOrDefaultAsync(p => p.Slug == product.Slug);
+                //if (slug != null)
+                //{
+                //    //ModelState.AddModelError("", "Sản phẩm đã có trong database");
+                //    //return View(product);
+                //}
 
                 if (product.ImageUpload != null)
                 {
@@ -115,8 +118,19 @@ namespace EShop.Areas.Admin.Controllers
                     fs.Close();
                     product.Image = imageName;
                 }
+                else
+                {
+                    // Lưu trữ giá trị hiện tại của product.Image vào một biến tạm thời
+                    //string currentImage = product.Image;
 
-                _dataContext.Update(product);
+                    // Gán lại product.Image bằng giá trị của biến tạm thời
+                    product.Image = existingProduct.Image;
+                }
+
+                //_dataContext.Update(product);
+
+                // Cập nhật trạng thái của existingProduct với dữ liệu mới từ product
+                _dataContext.Entry(existingProduct).CurrentValues.SetValues(product);
                 await _dataContext.SaveChangesAsync();
                 TempData["success"] = "Cập nhật sản phẩm thành công";
                 return RedirectToAction("Index");

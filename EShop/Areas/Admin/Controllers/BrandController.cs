@@ -116,7 +116,7 @@ namespace EShop.Areas.Admin.Controllers
 
             _dataContext.Brands.Remove(brand);
             await _dataContext.SaveChangesAsync();
-            TempData["success"] = "Danh mục đã xóa";
+            TempData["success"] = "Thương hiệu đã xóa";
             return RedirectToAction("Index");
         }
     }

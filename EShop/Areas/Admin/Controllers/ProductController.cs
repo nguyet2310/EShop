@@ -100,40 +100,42 @@ namespace EShop.Areas.Admin.Controllers
                 var existingProduct = await _dataContext.Products.FindAsync(product.Id);
 
                 product.Slug = product.Name.Replace(" ", "-");
-                //var slug = await _dataContext.Products.FirstOrDefaultAsync(p => p.Slug == product.Slug);
-                //if (slug != null)
-                //{
-                //    //ModelState.AddModelError("", "Sản phẩm đã có trong database");
-                //    //return View(product);
-                //}
-
-                if (product.ImageUpload != null)
+                var slug = await _dataContext.Products.FirstOrDefaultAsync(p => p.Slug == product.Slug);
+                if (slug != null && slug.Id != product.Id)
                 {
-                    string uploadsDir = Path.Combine(_webHostEnvironment.WebRootPath, "media/products");
-                    string imageName = Guid.NewGuid().ToString() + "_" + product.ImageUpload.FileName;
-                    string filePath = Path.Combine(uploadsDir, imageName);
-
-                    FileStream fs = new FileStream(filePath, FileMode.Create);
-                    await product.ImageUpload.CopyToAsync(fs);
-                    fs.Close();
-                    product.Image = imageName;
+                    ModelState.AddModelError("", "Sản phẩm đã có trong database");
+                    return View(product);
                 }
                 else
                 {
-                    // Lưu trữ giá trị hiện tại của product.Image vào một biến tạm thời
-                    //string currentImage = product.Image;
+                    if (product.ImageUpload != null)
+                    {
+                        string uploadsDir = Path.Combine(_webHostEnvironment.WebRootPath, "media/products");
+                        string imageName = Guid.NewGuid().ToString() + "_" + product.ImageUpload.FileName;
+                        string filePath = Path.Combine(uploadsDir, imageName);
 
-                    // Gán lại product.Image bằng giá trị của biến tạm thời
-                    product.Image = existingProduct.Image;
+                        FileStream fs = new FileStream(filePath, FileMode.Create);
+                        await product.ImageUpload.CopyToAsync(fs);
+                        fs.Close();
+                        product.Image = imageName;
+                    }
+                    else
+                    {
+                        // Lưu trữ giá trị hiện tại của product.Image vào một biến tạm thời
+                        //string currentImage = product.Image;
+
+                        // Gán lại product.Image bằng giá trị của biến tạm thời
+                        product.Image = existingProduct.Image;
+                    }
+
+                    //_dataContext.Update(product);
+
+                    // Cập nhật trạng thái của existingProduct với dữ liệu mới từ product
+                    _dataContext.Entry(existingProduct).CurrentValues.SetValues(product);
+                    await _dataContext.SaveChangesAsync();
+                    TempData["success"] = "Cập nhật sản phẩm thành công";
+                    return RedirectToAction("Index");
                 }
-
-                //_dataContext.Update(product);
-
-                // Cập nhật trạng thái của existingProduct với dữ liệu mới từ product
-                _dataContext.Entry(existingProduct).CurrentValues.SetValues(product);
-                await _dataContext.SaveChangesAsync();
-                TempData["success"] = "Cập nhật sản phẩm thành công";
-                return RedirectToAction("Index");
             }
             else
             {

@@ -129,7 +129,6 @@ namespace EShop.Areas.Admin.Controllers
                     }
 
                     //_dataContext.Update(product);
-
                     // Cập nhật trạng thái của existingProduct với dữ liệu mới từ product
                     _dataContext.Entry(existingProduct).CurrentValues.SetValues(product);
                     await _dataContext.SaveChangesAsync();

@@ -1,9 +1,9 @@
-﻿@model UserModel
+﻿@model LoginViewModel
 @{
     ViewData["Title"] = "Login";
 }
 
-<section id="form">
+<section id="">
 	<!--form-->
 	<div class="container">
 		<div class="row">
@@ -25,6 +25,7 @@
 						</div>
 						<div class="form-group">
 							<button class="btn btn-default">Login</button>
+							<a asp-action="Create" asp-controller="Account">Tạo tài khoản mới</a>
 						</div>
 					</form>
 				</div><!--/login form-->

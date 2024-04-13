@@ -88,11 +88,20 @@
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
-								<li><a href="#"><i class="fa fa-user"></i> Account</a></li>
-								<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
-								<li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
+								
 								<li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-								<li><a href="/Account"><i class="fa fa-lock"></i> Login</a></li>
+								@if(User.Identity?.IsAuthenticated ?? false)
+								{
+									<li><a href="#"><i class="fa fa-user"></i> Account</a></li>
+									<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
+									<li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
+									<li><a href="/Account/Logout"><i class="fa fa-lock"></i>Logout</a></li>
+									<li><a href="#"><i class="fa"></i>Hi, @User.Identity.Name</a></li>
+								}
+								else
+								{
+									<li><a href="/Account/Login"><i class="fa fa-lock"></i>Login</a></li>
+								}
 							</ul>
 						</div>
 					</div>
@@ -148,51 +157,6 @@
 			</div>
 		</div><!--/header-bottom-->
 	</header><!--/header-->
-
-	<section id="slider">
-		<!--slider-->
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12">
-					<div id="slider-carousel" class="carousel slide" data-ride="carousel">
-						<ol class="carousel-indicators">
-							<li data-target="#slider-carousel" data-slide-to="0" class="active"></li>
-							<li data-target="#slider-carousel" data-slide-to="1"></li>
-							<li data-target="#slider-carousel" data-slide-to="2"></li>
-						</ol>
-
-						<div class="carousel-inner">
-							<div class="item active">
-								<div class="col-sm-12">
-									<img src="https://www.computerlounge.co.nz/data/media/images/blog//230614-Budget-Prebuilds-Banner_2.png" width="100%" alt="" />
-								</div>
-							</div>
-							<div class="item">
-								<div class="col-sm-12">
-									<img src="https://e0.pxfuel.com/wallpapers/164/712/desktop-wallpaper-top-20-for-dell-laptops-19-alternative-for-dell-inspiron-high-resolution.jpg" width="100%" alt="" />
-								</div>
-							</div>
-
-							<div class="item">
-								<div class="col-sm-12">
-									<img src="https://www.laptoptoancau.com/Content/Uploads/files/Dell_Bannerq.jpg" width="100%" alt="" />
-								</div>
-							</div>
-
-						</div>
-
-						<a href="#slider-carousel" class="left control-carousel hidden-xs" data-slide="prev">
-							<i class="fa fa-angle-left"></i>
-						</a>
-						<a href="#slider-carousel" class="right control-carousel hidden-xs" data-slide="next">
-							<i class="fa fa-angle-right"></i>
-						</a>
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</section><!--/slider-->
 
 	<section>
 		<div class="container">

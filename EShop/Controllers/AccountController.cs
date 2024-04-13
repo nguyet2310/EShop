@@ -64,5 +64,11 @@ namespace EShop.Controllers
 			}
 			return View(loginVM);
 		}
+
+		public async Task<IActionResult> Logout(string returnUrl = "/")
+		{
+			await _signInManager.SignOutAsync();
+			return Redirect(returnUrl);
+		}
 	}
 }

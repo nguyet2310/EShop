@@ -36,6 +36,22 @@ namespace EShop.Controllers
                 _dataContext.Add(orderItem);
                 _dataContext.SaveChanges();
                 TempData["success"] = "Đơn hàng đã được tạo.";
+
+                // Lấy giỏ hàng từ session, nếu không có sẽ tạo mới
+                List<CartItemModel> cartItems = HttpContext.Session.GetJson<List<CartItemModel>>("Cart") ?? new List<CartItemModel>();
+                foreach (var cart in cartItems)
+                {
+                    var orderDetails = new OrderDetails();
+                    orderDetails.UserName = userEmail;
+                    orderDetails.OrderCode = ordercode;
+                    orderDetails.ProductId = cart.ProductId;
+                    orderDetails.Price = cart.Price;
+                    orderDetails.Quantity = cart.Quantity;
+                    _dataContext.Add(orderDetails); 
+                    _dataContext.SaveChanges();
+                }
+                HttpContext.Session.Remove("Cart");
+                TempData["success"] = "Chekout thành công, vui lòng chờ duyệt đơn hàng!";
                 return RedirectToAction("Index", "Cart");
             }
             return View();

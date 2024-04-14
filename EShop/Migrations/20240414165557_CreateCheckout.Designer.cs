@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EShop.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240413173552_CreateCheckout")]
+    [Migration("20240414165557_CreateCheckout")]
     partial class CreateCheckout
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -191,8 +191,8 @@ namespace EShop.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

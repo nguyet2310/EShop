@@ -17,8 +17,13 @@ namespace EShop.Areas.Admin.Controllers
 		}
 		public async Task<IActionResult> Index()
 		{
-
 			return View(await _dataContext.Orders.OrderByDescending(p => p.Id).ToListAsync());
 		}
-	}
+
+        public async Task<IActionResult> ViewOrder(string orderCode)
+        {
+			var detailsOrder = await _dataContext.OrderDetails.Include(od => od.Product).Where(od=>od.OrderCode == orderCode).ToListAsync();
+            return View(detailsOrder);
+        }
+    }
 }

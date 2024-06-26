@@ -96,6 +96,9 @@ namespace EShop.Areas.Admin.Controllers
         {
             ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name", product.CategoryId);
             ViewBag.Brands = new SelectList(_dataContext.Brands, "Id", "Name", product.BrandId);
+
+            //var existed_product = _dataContext.Products.Find(product.Id);//tim sp theo id product
+
             if (ModelState.IsValid)
             {
                 // Lấy sản phẩm từ cơ sở dữ liệu
@@ -116,11 +119,38 @@ namespace EShop.Areas.Admin.Controllers
                         string imageName = Guid.NewGuid().ToString() + "_" + product.ImageUpload.FileName;
                         string filePath = Path.Combine(uploadsDir, imageName);
 
+                        //delete old picture
+                        string oldfileImage = Path.Combine(uploadsDir, existingProduct.Image);
+                        try
+                        {
+                            if (System.IO.File.Exists(oldfileImage))
+                            {
+                                System.IO.File.Delete(oldfileImage);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ModelState.AddModelError("", "An error occurred while deleting the product image.");
+                        }
+
                         FileStream fs = new FileStream(filePath, FileMode.Create);
                         await product.ImageUpload.CopyToAsync(fs);
                         fs.Close();
                         product.Image = imageName;
+
+                        //existed_product.Image = imageName;
                     }
+
+                    // Update other product properties
+                    //existed_product.Name = product.Name;
+                    //existed_product.Description = product.Description;
+                    //existed_product.Price = product.Price;
+                    //existed_product.CategoryId = product.CategoryId;
+                    //existed_product.BrandId = product.BrandId;
+                    //...other properties
+
+                    //_dataContext.Update(existed_product); //Update the existing product object
+
                     else
                     {
                         // Lưu trữ giá trị hiện tại của product.Image vào một biến tạm thời
@@ -133,6 +163,7 @@ namespace EShop.Areas.Admin.Controllers
                     //_dataContext.Update(product);
                     // Cập nhật trạng thái của existingProduct với dữ liệu mới từ product
                     _dataContext.Entry(existingProduct).CurrentValues.SetValues(product);
+
                     await _dataContext.SaveChangesAsync();
                     TempData["success"] = "Cập nhật sản phẩm thành công";
                     return RedirectToAction("Index");
@@ -158,14 +189,22 @@ namespace EShop.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             ProductModel product = await _dataContext.Products.FindAsync(id);
-            if (!string.Equals(product.Image, "noname.jpg"))
+            if (product == null)
             {
-                string uploadsDir = Path.Combine(_webHostEnvironment.WebRootPath, "media/products");
-                string oldfileImage = Path.Combine(uploadsDir, product.Image);
+                return NotFound(); //Handle product not found
+            }
+            string uploadsDir = Path.Combine(_webHostEnvironment.WebRootPath, "media/products");
+            string oldfileImage = Path.Combine(uploadsDir, product.Image);
+            try
+            {
                 if(System.IO.File.Exists(oldfileImage))
                 {
                     System.IO.File.Delete(oldfileImage);
                 }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while deleting the product image.");
             }
             _dataContext.Products.Remove(product);
             await _dataContext.SaveChangesAsync();

@@ -17,7 +17,7 @@ namespace EShop.Models
         [Range(0.01, double.MaxValue)]
         [Column(TypeName = "decimal(8, 2)")]
         public decimal Price { get; set; }
-        public string Image { get; set; } = "noimgage.jpg";
+        public string Image { get; set; }
         [Required, Range(1, int.MaxValue, ErrorMessage = "Chọn một thương hiệu")]
         public int BrandId { get; set; }
         [Required, Range(1, int.MaxValue, ErrorMessage = "Chọn một danh mục")]
@@ -26,6 +26,6 @@ namespace EShop.Models
         public CategoryModel Category { get; set; }
         [NotMapped]
         [FileExtension]
-        public IFormFile ImageUpload { get; set; }
+        public IFormFile? ImageUpload { get; set; }
     }
 }

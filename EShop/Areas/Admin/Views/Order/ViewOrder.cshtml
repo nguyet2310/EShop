@@ -1,6 +1,6 @@
-﻿@model IEnumerable<OrderModel>
+﻿@model IEnumerable<OrderDetails>
 @{
-    ViewData["title"] = "Order Listed";
+    ViewData["title"] = "Order Details";
 }
 
 <h3>List Order</h3>
@@ -31,10 +31,6 @@
                     {
                         <span class="text text-danger">Đơn hàng thành công</span>
                     }
-                </td>
-                <td>
-                    <a href="/Admin/Order/ViewOrder/@item.OrderCode" class="btn btn-warning btn-sm">View Order</a>
-                    <a href="/Admin/Order/Delete/@item.Id" class="btn btn-danger btn-sm confirmDeletion">Delete</a>
                 </td>
             </tr>
         }

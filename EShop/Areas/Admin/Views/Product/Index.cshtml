@@ -1,17 +1,17 @@
 ﻿@using System.Web;
 @model IEnumerable<ProductModel>
 @{
-    ViewData["title"] = "Product Listed";
+    ViewData["title"] = "List Product";
 }
 
 <h3>List products</h3>
-<a href="/Admin/Product/Create">Add Product</a>
+<a class="btn btn-primary" href="/Admin/Product/Create">Add Product</a>
 @*<a asp-controller="Product" asp-action="Create">Add Product</a>*@
 
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">#</th>
+            <th scope="col">Id</th>
             <th scope="col">Product Name</th>
             <th scope="col">Product Description</th>
             <th scope="col">Product Price</th>

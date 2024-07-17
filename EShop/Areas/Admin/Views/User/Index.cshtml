@@ -1,0 +1,41 @@
+﻿@model IEnumerable<AppUserModel>
+@{
+    ViewData["title"] = "List User";
+}
+
+<h3>List users</h3>
+<a class="btn btn-primary" href="/Admin/User/Create">Add User</a>
+@*<a asp-controller="Product" asp-action="Create">Add Product</a>*@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">User Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Password Hash</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <th scope="row">@user.Id</th>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.PasswordHash</td>
+                <td>@user.PhoneNumber</td>
+                
+                <td>
+                    <a href="/Admin/User/Edit/@user.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="/Admin/User/Delete/@user.Id" class="btn btn-danger btn-sm confirmDeletion">Delete</a>
+
+                    @*<a asp-action="Edit" asp-controller="Product" asp-route-Id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                <a asp-action="Delete" asp-controller="Product" asp-route-Id="@item.Id" class="btn btn-danger btn-sm">Delete</a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

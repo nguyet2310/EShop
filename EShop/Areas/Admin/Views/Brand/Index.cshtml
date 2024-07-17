@@ -1,17 +1,17 @@
 ﻿@using System.Web;
 @model IEnumerable<BrandModel>
 @{
-    ViewData["title"] = "Brand Listed";
+    ViewData["title"] = "List Brand";
 }
 
 <h3>List products</h3>
-<a href="/Admin/Brand/Create">Add Brand</a>
+<a class="btn btn-primary" href="/Admin/Brand/Create">Add Brand</a>
 @*<a asp-controller="Product" asp-action="Create">Add Product</a>*@
 
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">#</th>
+            <th scope="col">Id</th>
             <th scope="col">Brand Name</th>
             <th scope="col">Brand Description</th>
             <th scope="col">Brand Slug</th>

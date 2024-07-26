@@ -1,12 +1,14 @@
 ﻿@model AppUserModel
 @{
-    ViewData["title"] = "Create User";
+    ViewData["title"] = "Edit User";
 }
 
-<h4>Create User</h4>
+<h4>Edit User</h4>
 
 <div class="col-md-9">
-    <form asp-action="Create" enctype="multipart/form-data">
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <input type="hidden" value="" asp-for="Id"/>
+
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label>User Name</label>
@@ -24,8 +26,8 @@
             <span asp-validation-for="PhoneNumber" class="text-danger" />
         </div>
         <div class="form-group">
-            <label>Password</label>
-            <textarea asp-for="PasswordHash" required class="form-control"></textarea>
+            <label>Current Password Hash</label>
+            <textarea asp-for="PasswordHash" readonly required class="form-control"></textarea>
             <span asp-validation-for="PasswordHash" class="text-danger" />
         </div>
         <div class="form-group">
@@ -34,7 +36,7 @@
             <span asp-validation-for="RoleId" class="text-danger" />
         </div>
         <div class="form-group">
-            <button class="btn btn-primary">Create</button>
+            <button class="btn btn-primary">Update</button>
         </div>
     </form>
     <a href="/Index">Back to List User</a>

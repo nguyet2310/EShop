@@ -83,6 +83,53 @@ namespace EShop.Areas.Admin.Controllers
             return View(user);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(string id, AppUserModel user)
+        {
+            var existingUser = await _userManager.FindByIdAsync(id);
+            if (existingUser == null)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                //Update other user properties (excluding password)
+                existingUser.UserName = user.UserName;
+                existingUser.Email = user.Email;
+                existingUser.PhoneNumber = user.PhoneNumber;
+                existingUser.RoleId = user.RoleId;
+
+                var createdUserResult = await _userManager.CreateAsync(user, user.PasswordHash);
+                if (createdUserResult.Succeeded)
+                {
+                    return RedirectToAction("Index", "User");
+                }
+                else
+                {
+                    foreach (var error in createdUserResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(user);
+                }
+            }
+            else
+            {
+                TempData["error"] = "Model có một vài thứ đang bị lỗi";
+                List<string> errors = new List<string>();
+                foreach (var value in ModelState.Values)
+                {
+                    foreach (var error in value.Errors)
+                    {
+                        errors.Add(error.ErrorMessage);
+                    }
+                }
+                string errorMas = string.Join("\n", errors);
+                return BadRequest(errorMas);
+            }
+        }
+
         public async Task<IActionResult> Delete(string id)
         {
             if(string.IsNullOrEmpty(id))

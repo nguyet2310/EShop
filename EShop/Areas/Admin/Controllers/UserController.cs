@@ -67,6 +67,22 @@ namespace EShop.Areas.Admin.Controllers
             }
         }
 
+        public async Task<IActionResult> Edit(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var roles = await _roleManager.Roles.ToListAsync();
+            ViewBag.Role = new SelectList(roles, "Id", "Name");
+            return View(user);
+        }
+
         public async Task<IActionResult> Delete(string id)
         {
             if(string.IsNullOrEmpty(id))

@@ -48,16 +48,16 @@ namespace EShop.Areas.Admin.Controllers
             else
             {
                 TempData["error"] = "Model có một vài thứ đang bị lỗi";
-                //List<string> errors = new List<string>();
-                //foreach (var value in ModelState.Values)
-                //{
-                //    foreach (var error in value.Errors)
-                //    {
-                //        errors.Add(error.ErrorMessage);
-                //    }
-                //}
-                //string errorMas = string.Join("\n", errors);
-                //return BadRequest(errorMas);
+                List<string> errors = new List<string>();
+                foreach (var value in ModelState.Values)
+                {
+                    foreach (var error in value.Errors)
+                    {
+                        errors.Add(error.ErrorMessage);
+                    }
+                }
+                string errorMas = string.Join("\n", errors);
+                return BadRequest(errorMas);
             }
             return View(brand);
         }

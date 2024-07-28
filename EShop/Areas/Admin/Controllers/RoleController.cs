@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EShop.Areas.Admin.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Area("Admin")]
+    [Authorize]
     public class RoleController : Controller
     {
         private readonly DataContext _dataContext;
@@ -37,7 +38,30 @@ namespace EShop.Areas.Admin.Controllers
             {
                 _roleManager.CreateAsync(new IdentityRole(model.Name)).GetAwaiter().GetResult();
             }
-            return Redirect("Index");
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            if(string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+            var role = await _roleManager.FindByIdAsync(id);
+            if(role == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                await _roleManager.DeleteAsync(role);
+                TempData["success"] = "Role deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while deleting the role.");
+            }
+            return RedirectToAction("Index");
         }
     }
 }

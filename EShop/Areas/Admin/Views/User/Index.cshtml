@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["title"] = "List User";
+    ViewData["title"] = "List Users";
 }
 
 <h3>List Users</h3>
@@ -21,16 +21,16 @@
         @foreach (var usersWithRoles in Model)
         {
             <tr>
-                <td>@usersWithRoles.Id</td>
-                <td>@usersWithRoles.UserName</td>
-                <td>@usersWithRoles.Email</td>
-                <td>@usersWithRoles.PasswordHash</td>
-                <td>@usersWithRoles.PhoneNumber</td>
+                <td>@usersWithRoles.User.Id</td>
+                <td>@usersWithRoles.User.UserName</td>
+                <td>@usersWithRoles.User.Email</td>
+                <td>@usersWithRoles.User.PasswordHash</td>
+                <td>@usersWithRoles.User.PhoneNumber</td>
                 <td>@usersWithRoles.RoleName</td>
                 
                 <td>
-                    <a href="/Admin/User/Edit/@usersWithRoles.Id" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="/Admin/User/Delete/@usersWithRoles.Id" class="btn btn-danger btn-sm confirmDeletion">Delete</a>
+                    <a href="/Admin/User/Edit/@usersWithRoles.User.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="/Admin/User/Delete/@usersWithRoles.User.Id" class="btn btn-danger btn-sm confirmDeletion">Delete</a>
 
                     @*<a asp-action="Edit" asp-controller="Product" asp-route-Id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
                 <a asp-action="Delete" asp-controller="Product" asp-route-Id="@item.Id" class="btn btn-danger btn-sm">Delete</a>*@

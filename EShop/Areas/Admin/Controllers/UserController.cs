@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly DataContext _dataContext;
@@ -34,7 +34,7 @@ namespace EShop.Areas.Admin.Controllers
         public async Task<IActionResult> Create()
         {
             var roles = await _roleManager.Roles.ToListAsync();
-            ViewBag.Role = new SelectList(roles, "Id", "Name");
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
             return View(new AppUserModel());
         }
 
@@ -48,7 +48,7 @@ namespace EShop.Areas.Admin.Controllers
                 if (createdUserResult.Succeeded)
                 {
                     var createdUser = await _userManager.FindByEmailAsync(user.Email);
-                    var userId = createdUser.Id;
+                    //var userId = createdUser.Id;
                     var role = _roleManager.FindByIdAsync(user.RoleId); // lấy roleId
                     //gán quyền
                     var addToRoleResult = await _userManager.AddToRoleAsync(createdUser, role.Result.Name);

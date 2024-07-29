@@ -92,7 +92,7 @@ namespace EShop.Areas.Admin.Controllers
                 return NotFound();
             }
             var roles = await _roleManager.Roles.ToListAsync();
-            ViewBag.Role = new SelectList(roles, "Id", "Name");
+            ViewBag.Roles = new SelectList(roles, "Id", "Name");
             return View(user);
         }
 

@@ -19,9 +19,34 @@ namespace EShop.Areas.Admin.Controllers
             _dataContext = dataContext;
             _roleManager = roleManager;
         }
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _dataContext.Roles.OrderByDescending(r => r.Id).ToListAsync());
+        //}
+
+        public async Task<IActionResult> Index(int pg = 1)
         {
-            return View(await _dataContext.Roles.OrderByDescending(r => r.Id).ToListAsync());
+            List<IdentityRole> roles = await _dataContext.Roles.ToListAsync(); //33 datas
+
+            const int pageSize = 10; //10 items/trang
+
+            if (pg < 1) //page < 1;
+            {
+                pg = 1; //page ==1
+            }
+            int recsCount = roles.Count(); //33 items;
+
+            var pager = new Paginate(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize; //(3 - 1) * 10; 
+
+            //category.Skip(20).Take(10).ToList()
+
+            var data = roles.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            ViewBag.Pager = pager;
+
+            return View(data);
         }
 
         public IActionResult Create()

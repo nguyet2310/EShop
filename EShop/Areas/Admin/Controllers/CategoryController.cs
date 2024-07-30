@@ -26,8 +26,7 @@ namespace EShop.Areas.Admin.Controllers
 
 		public async Task<IActionResult> Index(int pg = 1)
 		{
-			List<CategoryModel> category = _dataContext.Categories.ToList(); //33 datas
-
+			List<CategoryModel> category = await _dataContext.Categories.ToListAsync(); //33 datas
 
 			const int pageSize = 10; //10 items/trang
 

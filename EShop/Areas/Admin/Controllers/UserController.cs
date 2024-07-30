@@ -22,14 +22,41 @@ namespace EShop.Areas.Admin.Controllers
             _userManager=userManager;
             _roleManager=roleManager;
         }
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var usersWithRoles = await (from u in _dataContext.Users
+        //                                join ur in _dataContext.UserRoles on u.Id equals ur.UserId
+        //                                join r in _dataContext.Roles on ur.RoleId equals r.Id
+        //                                select new { User = u, RoleName = r.Name }).ToListAsync();
+        //    return View(usersWithRoles);
+        //    //return View(await _userManager.Users.OrderByDescending(x => x.Id).ToListAsync());
+        //}
+        public async Task<IActionResult> Index(int pg = 1)
         {
             var usersWithRoles = await (from u in _dataContext.Users
                                         join ur in _dataContext.UserRoles on u.Id equals ur.UserId
                                         join r in _dataContext.Roles on ur.RoleId equals r.Id
-                                        select new { User = u, RoleName = r.Name }).ToListAsync();
-            return View(usersWithRoles);
-            //return View(await _userManager.Users.OrderByDescending(x => x.Id).ToListAsync());
+                                        select new { User = u, RoleName = r.Name }).ToListAsync(); //33 datas
+
+            const int pageSize = 10; //10 items/trang
+
+            if (pg < 1) //page < 1;
+            {
+                pg = 1; //page ==1
+            }
+            int recsCount = usersWithRoles.Count(); //33 items;
+
+            var pager = new Paginate(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize; //(3 - 1) * 10; 
+
+            //category.Skip(20).Take(10).ToList()
+
+            var data = usersWithRoles.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            ViewBag.Pager = pager;
+
+            return View(data);
         }
         public async Task<IActionResult> Create()
         {

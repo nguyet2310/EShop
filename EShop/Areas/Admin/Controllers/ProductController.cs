@@ -19,10 +19,34 @@ namespace EShop.Areas.Admin.Controllers
             _dataContext=dataContext;
             _webHostEnvironment=webHostEnvironment;
         }
-        public async Task<IActionResult> Index()
-        {
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _dataContext.Products.OrderByDescending(p => p.Id).Include(p => p.Category).Include(p => p.Brand).ToListAsync());
+        //}
 
-            return View(await _dataContext.Products.OrderByDescending(p => p.Id).Include(p => p.Category).Include(p => p.Brand).ToListAsync());
+        public async Task<IActionResult> Index(int pg = 1)
+        {
+            List<ProductModel> products = await _dataContext.Products.Include(p => p.Category).Include(p => p.Brand).ToListAsync(); //33 datas
+
+            const int pageSize = 10; //10 items/trang
+
+            if (pg < 1) //page < 1;
+            {
+                pg = 1; //page ==1
+            }
+            int recsCount = products.Count(); //33 items;
+
+            var pager = new Paginate(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize; //(3 - 1) * 10; 
+
+            //category.Skip(20).Take(10).ToList()
+
+            var data = products.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            ViewBag.Pager = pager;
+
+            return View(data);
         }
 
         public IActionResult Create()

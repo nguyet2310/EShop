@@ -1,4 +1,5 @@
-﻿using EShop.Repository;
+﻿using EShop.Models;
+using EShop.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,35 @@ namespace EShop.Areas.Admin.Controllers
 		{
 			_dataContext=dataContext;
 		}
-		public async Task<IActionResult> Index()
-		{
-			return View(await _dataContext.Orders.OrderByDescending(p => p.Id).ToListAsync());
-		}
+        //public async Task<IActionResult> Index()
+        //{
+        //	return View(await _dataContext.Orders.OrderByDescending(p => p.Id).ToListAsync());
+        //}
+
+        public async Task<IActionResult> Index(int pg = 1)
+        {
+            List<OrderModel> orders = await _dataContext.Orders.ToListAsync(); //33 datas
+
+            const int pageSize = 10; //10 items/trang
+
+            if (pg < 1) //page < 1;
+            {
+                pg = 1; //page ==1
+            }
+            int recsCount = orders.Count(); //33 items;
+
+            var pager = new Paginate(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize; //(3 - 1) * 10; 
+
+            //category.Skip(20).Take(10).ToList()
+
+            var data = orders.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            ViewBag.Pager = pager;
+
+            return View(data);
+        }
 
         public async Task<IActionResult> ViewOrder(string orderCode)
         {

@@ -16,7 +16,8 @@ namespace EShop.Areas.Admin.Controllers
         private readonly UserManager<AppUserModel> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserController(DataContext dataContext ,UserManager<AppUserModel> userManager, RoleManager<IdentityRole> roleManager)
+        public UserController(DataContext dataContext ,UserManager<AppUserModel> userManager, 
+            RoleManager<IdentityRole> roleManager)
         {
             _dataContext=dataContext;
             _userManager=userManager;

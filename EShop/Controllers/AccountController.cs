@@ -9,11 +9,14 @@ namespace EShop.Controllers
     {
 		private UserManager<AppUserModel> _userManager;
 		private SignInManager<AppUserModel> _signInManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
 
-		public AccountController(UserManager<AppUserModel> userManager, SignInManager<AppUserModel> signInManager)
+		public AccountController(UserManager<AppUserModel> userManager, 
+			SignInManager<AppUserModel> signInManager, RoleManager<IdentityRole> roleManager)
         {
 			_userManager = userManager;
 			_signInManager = signInManager;
+			_roleManager = roleManager;
 		}
 		public IActionResult Index()
 		{
@@ -26,23 +29,47 @@ namespace EShop.Controllers
         }
 
 		[HttpPost]
-		public async Task<IActionResult> Create(UserModel user)
+        [ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create(AppUserModel user)
 		{
 			if(ModelState.IsValid)
 			{
-				AppUserModel newUser = new AppUserModel{ UserName=user.Username, Email=user.Email };
-				IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
-				if (result.Succeeded)
+				//AppUserModel newUser = new AppUserModel { UserName=user.UserName, Email=user.Email };
+				var createdUserResult = await _userManager.CreateAsync(user, user.PasswordHash);
+				if (createdUserResult.Succeeded)
 				{
+					var createdUser = await _userManager.FindByEmailAsync(user.Email);
+					//var userId = createdUser.Id;
+					//var role = _roleManager.FindByIdAsync(user.RoleId); // lấy roleId
+																		//gán quyền
+					var addToRoleResult = await _userManager.AddToRoleAsync(createdUser, "User");
+					if (!addToRoleResult.Succeeded)
+					{
+						AddIdentityErrors(addToRoleResult);
+					}
 					TempData["success"] = "Tạo user thành công";
-					return Redirect("/account/login");
+					return Redirect("/Account/Login");
 				}
-				foreach(IdentityError error in result.Errors)
+				else
 				{
-					ModelState.AddModelError("", error.Description);
+					AddIdentityErrors(createdUserResult);
+					return View(user);
 				}
 			}
-			return View(user);
+			else
+			{
+				TempData["error"] = "Model có một vài thứ đang bị lỗi";
+				List<string> errors = new List<string>();
+				foreach (var value in ModelState.Values)
+				{
+					foreach (var error in value.Errors)
+					{
+						errors.Add(error.ErrorMessage);
+					}
+				}
+				string errorMas = string.Join("\n", errors);
+				return BadRequest(errorMas);
+			}
 		}
 
 		public IActionResult Login(string returnUrl)
@@ -69,6 +96,14 @@ namespace EShop.Controllers
 		{
 			await _signInManager.SignOutAsync();
 			return Redirect(returnUrl);
+		}
+
+		private void AddIdentityErrors(IdentityResult identityResult)
+		{
+			foreach (var error in identityResult.Errors)
+			{
+				ModelState.AddModelError(string.Empty, error.Description);
+			}
 		}
 	}
 }

@@ -84,6 +84,8 @@ namespace EShop.Areas.Admin.Controllers
                     {
                         AddIdentityErrors(addToRoleResult);
                     }
+                    TempData["success"] = "Tạo user thành công";
+
                     return RedirectToAction("Index", "User");
                 }
                 else
@@ -126,9 +128,9 @@ namespace EShop.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, AppUserModel user)
+        public async Task<IActionResult> Edit(AppUserModel user)
         {
-            var existingUser = await _userManager.FindByIdAsync(id);
+            var existingUser = await _userManager.FindByIdAsync(user.Id);
             if (existingUser == null)
             {
                 return NotFound();
@@ -144,6 +146,7 @@ namespace EShop.Areas.Admin.Controllers
                 var updatedUserResult = await _userManager.UpdateAsync(existingUser);
                 if (updatedUserResult.Succeeded)
                 {
+                    TempData["success"] = "Cập nhật user thành công";
                     return RedirectToAction("Index", "User");
                 }
                 else

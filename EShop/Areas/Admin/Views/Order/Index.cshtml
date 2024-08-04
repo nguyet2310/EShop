@@ -14,7 +14,6 @@
 }
 
 <h3>List Orders</h3>
-<a class="btn btn-primary" href="/Admin/Order/Create">Add Order</a>
 
 <table class="table">
     <thead>
@@ -39,11 +38,13 @@
                     }
                     else
                     {
-                        <span class="text text-danger">Đơn hàng thành công</span>
+                        <span class="text text-danger">Đã xử lý</span>
                     }
                 </td>
                 <td>
-                    <a href="/Admin/Order/ViewOrder/@item.OrderCode" class="btn btn-warning btn-sm">View Order</a>
+                    @*<a href="/Admin/Order/ViewOrder/@item.OrderCode" class="btn btn-warning btn-sm">View Order</a>*@
+                    @*<a href="/Admin/Order/ViewOrder?orderCode=@item.OrderCode" class="btn btn-warning btn-sm">View Order</a>*@
+                    <a asp-controller="Order" asp-action="ViewOrder" asp-route-orderCode="@item.OrderCode" class="btn btn-warning btn-sm">View Order</a>
                 </td>
             </tr>
         }

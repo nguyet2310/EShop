@@ -48,8 +48,33 @@ namespace EShop.Areas.Admin.Controllers
 
         public async Task<IActionResult> ViewOrder(string orderCode)
         {
-			var detailsOrder = await _dataContext.OrderDetails.Include(od => od.Product).Where(od=>od.OrderCode == orderCode).ToListAsync();
+            //if (string.IsNullOrEmpty(orderCode))
+            //{
+            //    return BadRequest("Order code is required.");
+            //}
+            var detailsOrder = await _dataContext.OrderDetails.Include(od => od.Product).Where(od => od.OrderCode == orderCode).ToListAsync();
             return View(detailsOrder);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateOrder(string orderCode, int status)
+        {
+            var order = await _dataContext.Orders.FirstOrDefaultAsync(o => o.OrderCode == orderCode);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            order.Status = status;
+            try
+            {
+                await _dataContext.SaveChangesAsync();
+                return Ok(new { success = true, message = "Order status updated successfully" });
+                //return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while updating the order status.");
+            }
         }
     }
 }

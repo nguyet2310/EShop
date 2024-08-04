@@ -31,7 +31,7 @@
                                     <a href=""><img src="~/images/@item.Image" alt="" width="80px"></a>
                                 </td>
                                 <td class="cart_description">
-                                    <h4><a href="">@item.ProductName</a></h4>
+                                    <p>@item.ProductName</p>
                                 </td>
                                 <td class="cart_price">
                                     <p>@item.Price</p>
@@ -39,7 +39,7 @@
                                 <td class="cart_quantity">
                                     <a class="btn btn-default btn-sm" asp-controller="Cart" asp-action="Increase" asp-route-id="@item.ProductId"> + </a>
                                     <input class="cart_quantity_input" type="text" name="quantity" value="@item.Quantity" autocomplete="off" size="2">
-                                    <a class="btn btn-success btn-sm" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.ProductId"> - </a>
+                                    <a class="btn btn-default btn-sm" asp-controller="Cart" asp-action="Decrease" asp-route-id="@item.ProductId"> - </a>
                                     <a class="btn btn-danger btn-sm" asp-controller="Cart" asp-action="Remove" asp-route-id="@item.ProductId"> Remove </a>
                                 </td>
                                 <td class="cart_total">

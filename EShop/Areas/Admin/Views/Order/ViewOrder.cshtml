@@ -1,38 +1,82 @@
 ﻿@model IEnumerable<OrderDetails>
 @{
     ViewData["title"] = "Order Details";
+    decimal total = 0;
+    decimal subtotal = 0;
 }
 
-<h3>List Order</h3>
-@*<a href="/Admin/Order/Create">Add Order</a>*@
+<h3>Order Details</h3>
 
 <table class="table">
     <thead>
         <tr>
             <th scope="col">Order Code</th>
             <th scope="col">UserName</th>
-            <th scope="col">Order Date</th>
-            <th scope="col">Order Status</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Subtotal</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
+            subtotal = item.Quantity + item.Price;
+            total += subtotal;
             <tr>
-                <th scope="row">@item.OrderCode</th>
+                <input type="hidden" asp-for="@item.OrderCode" class="getId" />
+                <td>@item.OrderCode</td>
                 <td>@item.UserName</td>
-                @*<td>@item.CreatedDate</td>
-                <td>
-                    @if (@item.Status == 1)
-                    {
-                        <span class="text text-success">Đơn hàng mới</span>
-                    }
-                    else
-                    {
-                        <span class="text text-danger">Đơn hàng thành công</span>
-                    }
-                </td>*@
+                <td>@item.Product.Name</td>
+                <td>@item.Price</td>
+                <td>@item.Quantity</td>
+                <td>@subtotal.ToString("C")</td>
             </tr>
         }
+        <tr>
+            <th colspan="4">Total: @total.ToString("C")</th>
+            @*<td></td>*@
+            <td>
+                <select class="form-control select-update-order">
+                    <option value="1">Đơn hàng mới</option>
+                    <option value="0">Đã xử lý</option>
+                </select>
+            </td>
+        </tr>
+        <a class="btn btn-primary" href="/Admin/Order/Index">Back to List Orders</a>
     </tbody>
 </table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function(){
+            $('.select-update-order').change(function(){
+                var status = $(this).val();
+                var ordercode = $('.getId').val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("UpdateOrder")",
+                    data: {status: status, ordercode: ordercode}, //send data to the server
+
+                    success: function(result)
+                    {
+                        //handle success update
+                        if(result.success)
+                        {
+                            //update UI or show success message
+                            //console.log("Update successful");
+                            Swal.fire("Cập nhật đơn hàng thành công.");
+                        }
+                        else
+                        {
+                            //handle error
+                            //console.log("Update failed: " + result.message);
+                            Swal.fire("Cập nhật đơn hàng không thành công. " + result.message);
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+}

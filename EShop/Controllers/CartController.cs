@@ -29,6 +29,7 @@ namespace EShop.Controllers
             return View();
         }
 
+        //[HttpPost]
         public async Task<IActionResult> Add(int id)
         {
             ProductModel product = await _dataContext.Products.FindAsync(id);
@@ -52,9 +53,10 @@ namespace EShop.Controllers
             // Lưu lại danh sách giỏ hàng đã cập nhật vào session
             HttpContext.Session.SetJson("Cart", cart);
 
-            TempData["success"] = "Add Item to cart successfully";
+            //TempData["success"] = "Add Item to cart successfully";
+			return Ok(new { success = true, message = "Order status updated successfully" });
 
-            return Redirect(Request.Headers["Referer"].ToString());
+			//return Redirect(Request.Headers["Referer"].ToString());
         }
 
         public async Task<IActionResult> Decrease(int id)

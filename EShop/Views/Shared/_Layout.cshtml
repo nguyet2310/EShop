@@ -96,8 +96,13 @@
 									<li><a href="#"><i class="fa fa-user"></i> Account</a></li>
 									<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
 									<li><a href="/Cart"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-									<li><a href="/Account/Logout"><i class="fa fa-	lock"></i>Logout</a></li>
-									<li><a href="#"><i class="fa"></i>Hi, @User.Identity.Name</a></li>
+									@if (User.IsInRole("Admin") || User.IsInRole("Author") || User.IsInRole("Publisher")
+											|| User.IsInRole("Sale"))
+									{
+										<li><a asp-controller="Admin"><i class="fa fa-lock"></i>Manage Shop</a></li>
+									}
+									<li><a href="#"><i class="fa fa-user"></i>Hi, @User.Identity.Name</a></li>
+									<li><a href="/Account/Logout"><i class="fa"></i>Logout</a></li>
 								}
 								else
 								{
@@ -137,11 +142,11 @@
 									</ul>
 								</li>
 								<li><a asp-controller="Cart">Cart</a></li>
-								@if (User.IsInRole("Admin") || User.IsInRole("Author") || User.IsInRole("Publisher")
+								@*@if (User.IsInRole("Admin") || User.IsInRole("Author") || User.IsInRole("Publisher")
 										|| User.IsInRole("Sale"))
 								{
 									<li><a asp-controller="Admin">Manage Shop</a></li>
-								}
+								}*@
 								@*<li class="dropdown">
 									<a href="#">Blog<i class="fa fa-angle-down"></i></a>
 									<ul role="menu" class="sub-menu">
@@ -155,9 +160,12 @@
 						</div>
 					</div>
 					<div class="col-sm-3">
-						<div class="search_box pull-right">
-							<input type="text" placeholder="Search" />
-						</div>
+                        <form asp-controller="Product" asp-action="Search" method="post">
+							<div class="search_box pull-right">
+								<input type="text" placeholder="Search" name="searchTerm" />
+								<button class="btn btn-warning" type="submit">Search</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>

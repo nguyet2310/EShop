@@ -28,13 +28,13 @@
                 <td>@item.OrderCode</td>
                 <td>@item.UserName</td>
                 <td>@item.Product.Name</td>
-                <td>@item.Price</td>
+                <td>@item.Price.ToString("#,##0 VNĐ")</td>
                 <td>@item.Quantity</td>
-                <td>@subtotal.ToString("C")</td>
+                <td>@subtotal.ToString("#,##0 VNĐ")</td>
             </tr>
         }
         <tr>
-            <th colspan="4">Total: @total.ToString("C")</th>
+            <th colspan="4">Total: @total.ToString("#,##0 VNĐ")</th>
             @*<td></td>*@
             <td>
                 <select class="form-control select-update-order">

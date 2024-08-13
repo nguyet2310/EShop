@@ -27,7 +27,7 @@ namespace EShop.Controllers
             return View(products);
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Detail(int id)
         {
             if(id == null)
             {
